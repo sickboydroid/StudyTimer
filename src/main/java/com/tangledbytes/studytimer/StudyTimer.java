@@ -11,7 +11,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class StudyTimer {
-	volatile long timerEndTime;
+	volatile long timerEndTime = -1;
+	volatile long timerStartTime = -1;
 	Label labelTimeShower;
 	boolean playSoundOnCompletion;
 	Runnable completionRunnable;
@@ -24,7 +25,8 @@ public class StudyTimer {
 	public void resetTimer(long durationMillis, boolean playSoundOnCompletion, Runnable completionRunnable) {
 		timerEndTime = -1;
 		while (timerRunning) Thread.onSpinWait();
-		timerEndTime = System.currentTimeMillis() + durationMillis;
+		timerStartTime = System.currentTimeMillis();
+		timerEndTime = timerStartTime + durationMillis;
 		this.playSoundOnCompletion = playSoundOnCompletion;
 		this.completionRunnable = completionRunnable;
 		startTimer();
@@ -62,6 +64,18 @@ public class StudyTimer {
 		if (completionRunnable != null) {
 			completionRunnable.run();
 		}
+	}
+
+	public long getTimerEndTime() {
+		return timerEndTime;
+	}
+
+	public long getTimerStartTime() {
+		return timerEndTime;
+	}
+
+	public boolean isTimerRunning() {
+		return timerRunning;
 	}
 
 	public void setLabelTime(long minutes, long seconds, long millis) {
